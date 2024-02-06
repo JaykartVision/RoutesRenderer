@@ -20,7 +20,9 @@ void startTest()
 	//printf("SizeCells %d SizePoints %d SizeEdges %d\n", SizeCells(map), SizePoints(map), SizeEdges(map));
 	SetMaxNearestPoints(map);
 	InsertCrossEdges(map);
-	InsertEdgesMap(map);
+	PrintMapTypeCells(map);
+	PrintMapTypeCellsSDL(map);
+	InsertEdgesMapCross(map);
 	PrintMapTypeCells(map);
 	PrintMapTypeCellsSDL(map);
 	PrintPoints(map);
@@ -434,19 +436,19 @@ void InsertCrossEdges(void* map)
 void InsertEdgesMap(void* map)
 {
 	ResetLevelCells(map);
-	ResetNearestPoints(map);
+	ResetAllNearestPoints(map);
 	ResetWaveCells(map);
 	ResetDrawEdgeCells(map);
 	for (int numberPoint_from = 0; numberPoint_from < SizePoints(map); numberPoint_from++)
 	{
-		CalcWave(map, ReturnPosEdge(map, &numberPoint_from));
+		CalcWave(map, &numberPoint_from);
 		int countEdges = SizeEdgesFrom(map, &numberPoint_from);
 		if (countEdges < *(int*)ReturnMaxNearestEdge(map, &numberPoint_from))
 		{
 			int numberNearPoint = 0;
-			for (countEdges; ((countEdges < *(int*)ReturnMaxNearestEdge(map, &numberPoint_from)) && (numberNearPoint < SizeNearestPoints(map))); )
+			for (countEdges; ((countEdges < *(int*)ReturnMaxNearestEdge(map, &numberPoint_from)) && (numberNearPoint < SizeNearestPoints(map, 0))); )
 			{
-				void* numberPoint_to = ReturnNumberPointNearestPoint(map, numberNearPoint);
+				void* numberPoint_to = ReturnNumberPointNearestPoint(map, numberNearPoint, 0);
 				if ((ReturnDistanceEdge(map, &numberPoint_from, numberPoint_to) == NULL) && (SizeEdgesFrom(map, numberPoint_to) < *(int*)ReturnMaxNearestEdge(map, numberPoint_to)))
 				{
 					if (*(char*)ReturnCrossRoutes(map) == '0')
@@ -469,8 +471,35 @@ void InsertEdgesMap(void* map)
 		ResetLevelCells(map);
 		ResetWaveCells(map);
 		ResetDrawEdgeCells(map);
-		ResetNearestPoints(map);
+		ResetAllNearestPoints(map);
 	}
+}
+
+void InsertEdgesMapCross(void* map)
+{
+	ResetLevelCells(map);
+	ResetAllNearestPoints(map);
+	ResetWaveCells(map);
+	ResetDrawEdgeCells(map);
+	for (int numberPoint_from = 0; numberPoint_from < SizePoints(map); numberPoint_from++)
+	{
+		CalcWave(map, &numberPoint_from);
+		//ResetLevelCells(map);
+		//ResetWaveCells(map);
+	}
+	PrintAllNearestPoints(map);
+	for (int nearestNumberPoint = 0; 1; nearestNumberPoint++)
+	{
+		for (int numberPoint_From = 0; numberPoint_From < SizePoints(map); numberPoint_From++)
+		{
+			if (nearestNumberPoint < SizeNearestPoints(map, &numberPoint_From))
+			{
+				CalcWaveCross(map, ReturnPosEdge(map, &numberPoint_From), ReturnPosEdge(map, ReturnNumberPointNearestPoint(map, &nearestNumberPoint, &numberPoint_From)));
+			}
+		}
+	}
+
+	printf("DEBUG");
 }
 
 void RunAlgDijkstra(void* map)
@@ -988,7 +1017,7 @@ void DeletePointFrom(void* map)
 	if (*(char*)ReturnCrossRoutes(map) == '0')
 	{
 		ResetLevelCells(map);
-		ResetNearestPoints(map);
+		ResetAllNearestPoints(map);
 		ResetWaveCells(map);
 		ResetDrawEdgeCells(map);
 		char inputPoint = ' ';
@@ -1007,7 +1036,7 @@ void DeletePointFrom(void* map)
 				}
 				RemovePoint(map, ReturnNumberPoint(map, &intNamePoint_from));
 				ResetLevelCells(map);
-				ResetNearestPoints(map);
+				ResetAllNearestPoints(map);
 				ResetWaveCells(map);
 				ResetDrawEdgeCells(map);
 				break;

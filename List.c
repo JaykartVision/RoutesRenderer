@@ -314,7 +314,7 @@ void* Concat(void* inputList1, void* inputList2)
 	return list1;
 }
 
-void Foreach(void* inputList, void (*func)(void*))
+void Foreach(void* inputList, void (*func)(void* ))
 {
 	if (inputList == NULL) return NULL;
 	List* list = (List*)inputList;

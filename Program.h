@@ -14,6 +14,7 @@ void DeletePointFrom(void* map);
 void ReDrawAllEdges(void* map);
 void InsertCrossEdges(void* map);
 void InsertEdgesMap(void* map);
+void InsertEdgesMapCross(void* map);
 void RunAlgDijkstra(void* map);
 void DisableEdgeMap(void* map);
 void AddMaxNearestPoints(void* map);

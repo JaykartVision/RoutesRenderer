@@ -31,7 +31,7 @@ typedef struct Map1
 	Tree* cells; /*key: int pos, data: char type, int level*/
 	Tree* points; /*key: int intNamePoint, data: int numberPoint*/
 	List* edges; /*data: int intNamePoint, int pos, int maxNearest, Tree: key: int intNamePoint, data: int distance, char enabled*/
-	List* nearestPoints; /*data: int numberPoint*/
+	List* nearestPoints; /*data: List: data: int numberPoint*/
 	List* waveCells; /*data: int pos*/
 	List* drawEdgeCells; /*data: int pos*/
 	List* drawIters; /*data: char iter*/
@@ -56,7 +56,7 @@ void* ReturnDistanceEdge(Map1* map, int* numberPoint_From, int* numberPoint_To);
 void* ReturnEnabledEdge(Map1* map, int* numberPoint_From, int* numberPoint_To);
 void* ReturnDistanceToEdge(ToEdge* toEdge);
 void* ReturnEnabledToEdge(ToEdge* toEdge);
-void* ReturnNumberPointNearestPoint(Map1* map, int number);
+void* ReturnNumberPointNearestPoint(Map1* map, int* number, int* numberPoint_From);
 void* ReturnPosFirstWaveCell(Map1* map);
 void* ReturnPosFirstDrawEdgeCell(Map1* map);
 void* ReturnIterNextDrawIters(Map1* map);
@@ -77,7 +77,7 @@ int SizeCells(Map1* map);
 int SizePoints(Map1* map);
 int SizeEdges(Map1* map);
 int SizeEdgesFrom(Map1* map, int* numberPoint_From);
-int SizeNearestPoints(Map1* map);
+int SizeNearestPoints(Map1* map, int* numberPoint_From);
 int SizeWaveCells(Map1* map);
 int SizeDrawEdgeCells(Map1* map);
 int SizeDrawIters(Map1* map);
@@ -85,12 +85,12 @@ int SizeDrawIters(Map1* map);
 void* InsertCell(Map1* map, int pos, char type, int level);
 void* InsertPoint(Map1* map, int intNamePoint, int pos);
 void* InsertEdge(Map1* map, int* numberPoint_From, int* numberPoint_To, int distance, char enabled);
-void* InsertEndNearestPoint(Map1* map, int* numberPoint);
+void* InsertEndNearestPoint(Map1* map, int* numberPoint, int* numberPoint_From);
 void* InsertEndWaveCell(Map1* map, int* pos);
 void* InsertBeginDrawEdgeCell(Map1* map, int* pos);
 void* InsertBeginDrawIters(Map1* map, char* iter);
 
-void RemovePoint(Map1* map, int* numberPoint_To);
+void RemovePoint(Map1* map, int* numberPoint_Ptr);
 void* RemoveEdge(Map1* map, int* numberPoint_From, int* numberPoint_To);
 void RemoveFirstWaveCell(Map1* map);
 void RemoveFirstDrawEdgeCell(Map1* map);
@@ -100,7 +100,8 @@ void RemoveFirstDrawIters(Map1* map);
 void ResetLevelCells(Map1* map);
 void ResetEnabledEdges(Map1* map);
 void ResetToEdges(Map1* map);
-void ResetNearestPoints(Map1* map);
+void ResetNearestPoints(Map1* map, int* numberPoint_From);
+void ResetAllNearestPoints(Map1* map);
 void ResetWaveCells(Map1* map);
 void ResetDrawEdgeCells(Map1* map);
 void ResetDrawIters(Map1* map);

@@ -334,7 +334,7 @@ void EraseAllEdge(void* map)
 	}
 }
 
-void CalcCell(void* map, int* pos)
+void CalcCell(void* map, int* pos, int* numberPoint_From)
 {
 	int pointX = CalcXCoord(map, pos);
 	int pointY = CalcYCoord(map, pos);
@@ -350,7 +350,7 @@ void CalcCell(void* map, int* pos)
 				if ((*typeNext >= 28) && (*typeNext != '0') && (*typeNext != '*'))
 				{
 					int intNameNext = CalcIntName(typeNext);
-					InsertEndNearestPoint(map, ReturnNumberPoint(map, &intNameNext));
+					InsertEndNearestPoint(map, ReturnNumberPoint(map, &intNameNext), numberPoint_From);
 				}
 				*levelNext = *(int*)ReturnLevelCell(map, pos) + 1;
 				InsertEndWaveCell(map, &cellPosNext);
@@ -361,17 +361,16 @@ void CalcCell(void* map, int* pos)
 	RemoveFirstWaveCell(map);
 }
 
-void CalcWave(void* map, int* posFrom)
+void CalcWave(void* map, int* numberPoint_From)
 {
 	ResetLevelCells(map);
 	ResetWaveCells(map);
 	ResetDrawEdgeCells(map);
-	ResetNearestPoints(map);
-	*(int*)ReturnLevelCell(map, posFrom) = 0;
-	InsertEndWaveCell(map, posFrom);
+	*(int*)ReturnLevelCell(map, ReturnPosEdge(map, numberPoint_From)) = 0;
+	InsertEndWaveCell(map, ReturnPosEdge(map, numberPoint_From));
 	while (SizeWaveCells(map) != 0)
 	{
-		CalcCell(map, ReturnPosFirstWaveCell(map));
+		CalcCell(map, ReturnPosFirstWaveCell(map), numberPoint_From);
 	}
 }
 

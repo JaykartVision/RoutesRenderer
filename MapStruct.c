@@ -57,7 +57,7 @@ void* InitMap1()
         map->nearestPoints = NULL;
         while (1)
         {
-            map->nearestPoints = (List*)ListCreate(CmpFuncInt1, sizeof(int));
+            map->nearestPoints = (List*)ListCreate(CmpFuncInt1, sizeof(void*));
             if (map->nearestPoints != NULL)break;
         }
         map->waveCells = NULL;
@@ -163,9 +163,9 @@ void* ReturnEnabledToEdge(ToEdge* toEdge)
 {
     return &toEdge->enabled;
 }
-void* ReturnNumberPointNearestPoint(Map1* map, int number)
+void* ReturnNumberPointNearestPoint(Map1* map, int* number, int* numberPoint_From)
 {
-    return Get(map->nearestPoints, number);
+    return Get(*(void**)Get(map->nearestPoints, *numberPoint_From), *number);
 }
 void* ReturnPosFirstWaveCell(Map1* map)
 {
@@ -251,9 +251,9 @@ int SizeEdgesFrom(Map1* map, int* numberPoint_From)
     int size = BstSize(fromEdge->ToEdges);
     return size;
 }
-int SizeNearestPoints(Map1* map)
+int SizeNearestPoints(Map1* map, int* numberPoint_From)
 {
-    int size = Length(map->nearestPoints);
+    int size = Length(*(void**)Get(map->nearestPoints, *numberPoint_From));
     return size;
 }
 int SizeWaveCells(Map1* map)
@@ -289,6 +289,8 @@ void* InsertPoint(Map1* map, int intNamePoint, int pos)
     fromEdge.pos = pos;
     fromEdge.ToEdges = BstCreate(CmpFuncInt1, sizeof(ToEdge));
     Append(map->edges, &fromEdge);
+    List* nearestList = ListCreate(CmpFuncInt1, sizeof(int));
+    Append(map->nearestPoints, &nearestList);
     return data;
 }
 void* InsertEdge(Map1* map, int* numberPoint_From, int* numberPoint_To, int distance, char enabled)
@@ -299,9 +301,9 @@ void* InsertEdge(Map1* map, int* numberPoint_From, int* numberPoint_To, int dist
     FromEdge* fromEdge = Get(map->edges, *numberPoint_From);
     return BstInsert(fromEdge->ToEdges, &toEdge, ReturnIntNamePointEdge(map, numberPoint_To));
 }
-void* InsertEndNearestPoint(Map1* map, int* numberPoint)
+void* InsertEndNearestPoint(Map1* map, int* numberPoint, int* numberPoint_From)
 {
-    Append(map->nearestPoints, numberPoint);
+    Append(*(void**)Get(map->nearestPoints, *numberPoint_From), numberPoint);
 }
 void* InsertEndWaveCell(Map1* map, int* pos)
 {
@@ -316,11 +318,14 @@ void* InsertBeginDrawIters(Map1* map, char* iter)
     Prepend(map->drawIters, iter);
 }
 
-void RemovePoint(Map1* map, int* numberPoint_To)
+void RemovePoint(Map1* map, int* numberPoint_Ptr)
 {
-    int numberPoint = *numberPoint_To;
+    int numberPoint = *numberPoint_Ptr;
     int intNamePoint = *(int*)ReturnIntNamePointEdge(map, &numberPoint);
-    *(char*)ReturnTypeCell(map, ReturnPosEdge(map, numberPoint_To)) = '0';
+    FreeList(*(void**)Get(map->nearestPoints, *numberPoint_Ptr));
+    free(*(void**)Get(map->nearestPoints, *numberPoint_Ptr));
+    Remove(map->nearestPoints, *numberPoint_Ptr);
+    *(char*)ReturnTypeCell(map, ReturnPosEdge(map, numberPoint_Ptr)) = '0';
     FromEdge* fromEdge = NULL;
     for (int i = 0; i < SizeEdges(map); i++)
     {
@@ -381,9 +386,16 @@ void ResetToEdges(Map1* map)
         fromEdge->ToEdges = BstCreate(CmpFuncInt1, sizeof(ToEdge));
     }
 }
-void ResetNearestPoints(Map1* map)
+void ResetNearestPoints(Map1* map, int* numberPoint_From)
 {
-    FreeList(map->nearestPoints);
+    FreeList(*(void**)Get(map->nearestPoints, *numberPoint_From));
+}
+void ResetAllNearestPoints(Map1* map)
+{
+    for (int i = 0; i < SizePoints(map); i++)
+    {
+        ResetNearestPoints(map, &i);
+    }
 }
 void ResetWaveCells(Map1* map)
 {

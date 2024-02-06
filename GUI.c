@@ -137,13 +137,21 @@ void PrintWaveCells(void* map)
     printf("\n");
 }
 
-void PrintNearestPoints(void* map)
+void PrintNearestPoints(void* map, int* numberPoint)
 {
-    for (int i = 0; i < SizeNearestPoints(map); i++)
+    printf("From point %c To Points: ", CalcCharName(ReturnIntNamePointEdge(map, numberPoint)));
+    for (int i = 0; i < SizeNearestPoints(map, numberPoint); i++)
     {
-        printf("%c ", CalcCharName(ReturnIntNamePointEdge(map, ReturnNumberPointNearestPoint(map, i))));
+        printf("%c ", CalcCharName(ReturnIntNamePointEdge(map, ReturnNumberPointNearestPoint(map, &i, numberPoint))));
     }
     printf("\n");
+}
+void PrintAllNearestPoints(void* map)
+{
+    for (int i = 0; i < SizePoints(map); i++)
+    {
+        PrintNearestPoints(map, &i);
+    }
 }
 
 void PrintText(char* text)

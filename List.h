@@ -28,7 +28,7 @@ void* RemoveFirst(void* inputList, void* inputValue);
 void* RemoveAll(void* inputList, void* inputValue);
 void* Copy(void* inputList);
 void* Concat(void* inputList1, void* inputList2);
-void Foreach(void* inputList, void (*func)(void*));
+void Foreach(void* inputList, void (*func)(void* ));
 void FreeList(void* inputList);
 void* FindCustom(void* inputList, int (*predicate)(void*));
 
