@@ -87,7 +87,13 @@ void PrintMapTypeCellsSDL(void* map)
     SDL_DestroyRenderer(*ReturnRender(map));
     SDL_DestroyWindow(*ReturnWindow(map));
 }
-
+void PrintMaxNearestEdge(void* map)
+{
+    for (int i = 0; i < SizePoints(map); i++)
+    {
+        printf("Max nearest point %c: %d \n", CalcCharName(ReturnIntNamePointEdge(map, &i)),*(int*)ReturnMaxNearestEdge(map, &i));
+    }
+}
 void PrintPoints(void* map)
 {
     for (int i = 0; i < SizeEdges(map); i++)

@@ -488,17 +488,44 @@ void InsertEdgesMapCross(void* map)
 		//ResetWaveCells(map);
 	}
 	PrintAllNearestPoints(map);
-	for (int nearestNumberPoint = 0; 1; nearestNumberPoint++)
+	int count = SizePoints(map);
+	for (int nearestNumberPoint = 0; count > 0; nearestNumberPoint++)
 	{
 		for (int numberPoint_From = 0; numberPoint_From < SizePoints(map); numberPoint_From++)
 		{
-			if (nearestNumberPoint < SizeNearestPoints(map, &numberPoint_From))
+			printf("From %c\n", *(char*)ReturnTypeCell(map, ReturnPosEdge(map, &numberPoint_From)));
+			printf("To %c\n", *(char*)ReturnTypeCell(map, ReturnPosEdge(map, ReturnNumberPointNearestPoint(map, &nearestNumberPoint, &numberPoint_From))));
+			int sizeNearestPoints = SizeNearestPoints(map, &numberPoint_From);
+			int sizeEdgesFrom_from = SizeEdgesFrom(map, &numberPoint_From);
+			int maxNearestEdge_from = *(int*)ReturnMaxNearestEdge(map, &numberPoint_From);
+			void* distance = ReturnDistanceEdge(map, &numberPoint_From, ReturnNumberPointNearestPoint(map, &nearestNumberPoint, &numberPoint_From));
+			int sizeEdgesFrom_to = SizeEdgesFrom(map, ReturnNumberPointNearestPoint(map, &nearestNumberPoint, &numberPoint_From));
+			int maxNearestEdge_to = *(int*)ReturnMaxNearestEdge(map, ReturnNumberPointNearestPoint(map, &nearestNumberPoint, &numberPoint_From));
+			printf("DEBUG");
+			if (
+				(nearestNumberPoint < SizeNearestPoints(map, &numberPoint_From))
+				&&
+				(SizeEdgesFrom(map, &numberPoint_From) < *(int*)ReturnMaxNearestEdge(map, &numberPoint_From))
+				&&
+				(ReturnDistanceEdge(map, &numberPoint_From, ReturnNumberPointNearestPoint(map, &nearestNumberPoint, &numberPoint_From)) == NULL)
+				&&
+				(SizeEdgesFrom(map, ReturnNumberPointNearestPoint(map, &nearestNumberPoint, &numberPoint_From)) < *(int*)ReturnMaxNearestEdge(map, ReturnNumberPointNearestPoint(map, &nearestNumberPoint, &numberPoint_From)))
+				)
 			{
 				CalcWaveCross(map, ReturnPosEdge(map, &numberPoint_From), ReturnPosEdge(map, ReturnNumberPointNearestPoint(map, &nearestNumberPoint, &numberPoint_From)));
+				DrawEdge(map, ReturnPosEdge(map, &numberPoint_From), ReturnPosEdge(map, ReturnNumberPointNearestPoint(map, &nearestNumberPoint, &numberPoint_From)));
+				PrintMapLevelCells(map);
+				PrintMapTypeCells(map);
+				PrintMapTypeCellsSDL(map);
+				printf("DEBUG");
 			}
+			if (nearestNumberPoint >= SizeNearestPoints(map, &numberPoint_From)) count--;
 		}
+		if (count > 0) count = SizePoints(map);
 	}
-
+	PrintPoints(map);
+	PrintEdges(map);
+	PrintMaxNearestEdge(map);
 	printf("DEBUG");
 }
 

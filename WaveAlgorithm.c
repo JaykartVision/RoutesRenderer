@@ -112,11 +112,11 @@ int DrawEdge(void* map, int* posFrom, int* posTo)
 							InsertBeginDrawIters(map, &iter);
 
 							*(char*)ReturnTypeCell(map, &cellPos) = CalcTypeDraw(map);/*например*/
-							printf("From %c\n", *(char*)ReturnTypeCell(map, posFrom));
-							printf("To %c\n", *(char*)ReturnTypeCell(map, posTo));
+							//printf("From %c\n", *(char*)ReturnTypeCell(map, posFrom));
+							//printf("To %c\n", *(char*)ReturnTypeCell(map, posTo));
 							//PrintMapLevelCells(map);
 							//PrintNearestPoints(map);
-							PrintMapTypeCellsSDL(map);
+							//PrintMapTypeCellsSDL(map);
 							//printf("DEBUG");
 							break;
 						}
@@ -493,8 +493,8 @@ void CalcCellCross(void* map, int* pos, char charNameTo)
 					if (*typeNext == charNameTo)
 					{
 						ResetWaveCells(map);
-						printf("SizeWaveCells %d\n",SizeWaveCells(map));
-						printf("DEBUG\n");
+						//printf("SizeWaveCells %d\n",SizeWaveCells(map));
+						//printf("DEBUG\n");
 						return;
 					}
 				}
@@ -506,8 +506,8 @@ void CalcCellCross(void* map, int* pos, char charNameTo)
 				if (*typeNext == charNameTo)
 				{
 					ResetWaveCells(map);
-					printf("SizeWaveCells %d\n", SizeWaveCells(map));
-					printf("DEBUG\n");
+					//printf("SizeWaveCells %d\n", SizeWaveCells(map));
+					//printf("DEBUG\n");
 					return;
 				}
 			}
@@ -527,6 +527,6 @@ void CalcWaveCross(void* map, int* posFrom, int* posTo)
 	{
 		//PrintWaveCells(map);
 		CalcCellCross(map, ReturnPosFirstWaveCell(map), charNameTo);
-		PrintMapLevelCells(map);
+		//PrintMapLevelCells(map);
 	}
 }

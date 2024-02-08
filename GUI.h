@@ -7,6 +7,7 @@ void PrintMapCells(void* map);
 void PrintMapLevelCells(void* map);
 void PrintMapTypeCells(void* map);
 void PrintMapTypeCellsSDL(void* map);
+void PrintMaxNearestEdge(void* map);
 void PrintPoints(void* map);
 void PrintEdges(void* map);
 void PrintGraphRoutes(void* map, void* graphRoutes);
